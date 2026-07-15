@@ -166,11 +166,3 @@ airline-adf-project/
 <img width="1919" height="384" alt="image" src="https://github.com/user-attachments/assets/a61daa81-adb6-465b-b928-2d7bf838a4d9" />
 
 ---
-
-## 📚 Learning Reference
-
-This project was built by following along with the YouTube walkthrough
-[Azure Data Factory End-To-End Project With Azure DevOps | 2025 Zero To Pro Guide](https://youtu.be/Za_9XYwPbKM),
-then extended and adapted with my own configuration, naming, and pipeline structure.
-
----
