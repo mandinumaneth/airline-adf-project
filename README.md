@@ -155,6 +155,18 @@ airline-adf-project/
 
 ---
 
+## 📸 Pipeline Execution Evidence
+
+**All pipelines running successfully via the daily schedule trigger:**
+
+<img width="1919" height="427" alt="image" src="https://github.com/user-attachments/assets/01984fa7-959d-44e6-acc5-7d9637ad3a25" />
+
+**Trigger run history — `triggerIngest` firing on schedule:**
+
+<img width="1919" height="384" alt="image" src="https://github.com/user-attachments/assets/a61daa81-adb6-465b-b928-2d7bf838a4d9" />
+
+---
+
 ## 📚 Learning Reference
 
 This project was built by following along with the YouTube walkthrough
