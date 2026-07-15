@@ -1,0 +1,15 @@
+{
+	"name": "adfprojectonemandinu",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b0b428f8-6334-4004-b047-b13bcf07fab5",
+		"tenantId": "27e613e7-9d6c-453c-af50-3e6b2ea63f46"
+	}
+}

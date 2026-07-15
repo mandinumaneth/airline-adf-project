@@ -1,0 +1,122 @@
+{
+	"name": "Parent Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ExecuteOnPrem",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "onprem_ingestion",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"files": {
+							"value": "@pipeline().parameters.files",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute API",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ExecuteOnPrem",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "API_Ingestion",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Incremental",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute API",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQLToDatalake",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "FailureAlert",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Execute Incremental",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-26.centralindia.logic.azure.com:443/workflows/f49855ae7cd74181ab6bf006a67df780/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=D4v2YV-mKWYGHHIuo7RDqDNW-w3GiB8liTMJDUzXuGM",
+					"body": {
+						"value": "{\n    \"pipeline_name\" : \"@{pipeline().Pipeline}\",\n    \"run_id\" : \"@{pipeline().RunId}\",\n    \"status\" : \"@{activity('Execute Incremental').Status}\",\n    \"error\" : \"@{if(equals(activity('Execute Incremental').Status,'Failed'), string(activity('Execute Incremental').error),'No Error')}\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"files": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"file_name": "DimPassenger.csv"
+					},
+					{
+						"file_name": "DimAirline.csv"
+					},
+					{
+						"file_name": "DimFlight.csv"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-07-14T15:12:03Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
